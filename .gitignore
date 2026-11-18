@@ -6,3 +6,6 @@ data/*.csv
 
 # local training output
 train_log.txt
+
+# Local Netlify folder
+.netlify

@@ -1,5 +1,7 @@
 # ⚡ Electricity Theft Detection with a Wide & Deep Neural Network
 
+**Live demo:** https://electricity-theft-shruti.netlify.app (the trained model runs in your browser with TensorFlow.js)
+
 Detects electricity theft from smart-meter daily consumption data using a TensorFlow
 **Wide & Deep CNN**, then ranks customers so field teams know whom to inspect first.
 
