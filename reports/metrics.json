@@ -1,0 +1,74 @@
+{
+  "dataset": "data/synthetic_sgcc.csv",
+  "n_customers": 6000,
+  "n_days": 364,
+  "best_hyperparameters": {
+    "units": 64,
+    "dropout": 0.2,
+    "lr": 0.001
+  },
+  "search_results": [
+    {
+      "units": 64,
+      "dropout": 0.2,
+      "lr": 0.001,
+      "val_auc": 0.8503
+    },
+    {
+      "units": 64,
+      "dropout": 0.4,
+      "lr": 0.001,
+      "val_auc": 0.6376
+    },
+    {
+      "units": 128,
+      "dropout": 0.2,
+      "lr": 0.001,
+      "val_auc": 0.6328
+    },
+    {
+      "units": 128,
+      "dropout": 0.4,
+      "lr": 0.001,
+      "val_auc": 0.628
+    }
+  ],
+  "baseline_logreg": {
+    "threshold": 0.5,
+    "accuracy": 0.835,
+    "precision": 0.4086,
+    "recall": 0.7755,
+    "f1": 0.5352,
+    "auc": 0.8901,
+    "false_positives": 165,
+    "true_positives": 114,
+    "false_negatives": 33,
+    "true_negatives": 888
+  },
+  "dnn_default_threshold": {
+    "threshold": 0.5,
+    "accuracy": 0.8533,
+    "precision": 0.4453,
+    "recall": 0.8027,
+    "f1": 0.5728,
+    "auc": 0.9137,
+    "false_positives": 147,
+    "true_positives": 118,
+    "false_negatives": 29,
+    "true_negatives": 906
+  },
+  "dnn_tuned_threshold": {
+    "threshold": 0.79,
+    "accuracy": 0.9083,
+    "precision": 0.6034,
+    "recall": 0.7347,
+    "f1": 0.6626,
+    "auc": 0.9137,
+    "false_positives": 71,
+    "true_positives": 108,
+    "false_negatives": 39,
+    "true_negatives": 982
+  },
+  "fp_reduction_vs_default_threshold_pct": 51.7,
+  "fp_reduction_vs_baseline_pct": 57.0
+}

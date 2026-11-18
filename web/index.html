@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Electricity Theft Detection · Wide & Deep CNN</title>
+  <meta name="description" content="Detect electricity theft from smart-meter data with a TensorFlow Wide & Deep CNN, running live in your browser." />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <span class="logo">⚡ Theft Detection</span>
+      <nav><a href="#demo">Live demo</a><a href="#how">How it works</a><a id="gh" target="_blank" rel="noopener">GitHub ↗</a></nav>
+    </div>
+  </header>
+
+  <section class="hero wrap">
+    <p class="eyebrow">Deep learning · Smart grids · TensorFlow</p>
+    <h1>Finding electricity theft in smart-meter data</h1>
+    <p class="lead">A Wide &amp; Deep convolutional neural network reads a year of daily consumption per
+      customer and ranks who field teams should inspect first. Tuned to cut false alarms, because every
+      false positive is a wasted site visit.</p>
+    <div class="metrics">
+      <div><b id="mAcc">–</b><span>Accuracy</span></div>
+      <div><b id="mAuc">–</b><span>ROC AUC</span></div>
+      <div><b id="mRec">–</b><span>Thieves caught (recall)</span></div>
+      <div><b id="mFp">–</b><span>False positives vs baseline</span></div>
+    </div>
+    <p class="muted small" id="mNote"></p>
+  </section>
+
+  <section id="demo" class="wrap card">
+    <div class="demo-head">
+      <div>
+        <h2>Live demo</h2>
+        <p class="muted small" id="modelStatus">Loading model…</p>
+      </div>
+      <div class="actions">
+        <button id="btnSample" class="btn primary" disabled>Run on sample customers</button>
+        <label class="btn">Upload CSV<input id="file" type="file" accept=".csv" hidden disabled /></label>
+      </div>
+    </div>
+    <p class="muted small">CSV format: <code>CONS_NO</code>, optional <code>FLAG</code>, then one column per day (364 days).
+      Your data never leaves your browser: the model runs locally with TensorFlow.js.</p>
+    <div id="error" class="error" hidden></div>
+
+    <div id="results" hidden>
+      <div class="kpis">
+        <div><span>Source</span><b id="source"></b></div>
+        <div><span>Customers scored</span><b id="kScored"></b></div>
+        <div><span>Flagged for inspection</span><b id="kFlagged"></b></div>
+        <div><span>Flag precision</span><b id="kPrec"></b></div>
+        <div><span>Thieves caught</span><b id="kRec"></b></div>
+      </div>
+      <p class="muted small">Sample customers include ones the model was trained on, so demo scores look better than real-world performance. The test-set numbers at the top are the honest measure.</p>
+      <div class="slider">
+        <label for="thr">Decision threshold <b id="thrVal"></b></label>
+        <input id="thr" type="range" min="0.05" max="0.95" step="0.01" />
+        <span class="muted small">Higher = fewer false alarms, more missed thieves</span>
+      </div>
+      <div class="split">
+        <div class="tablebox">
+          <table>
+            <thead><tr><th>Customer</th><th>P(theft)</th><th>Action</th><th id="labelHead">Actual</th></tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div>
+          <div class="cust-head"><h3 id="custName"></h3><span id="custProb" class="pill"></span></div>
+          <div id="chart"></div>
+          <div class="legend"><span class="l-raw"></span>daily kWh <span class="l-avg"></span>7-day average</div>
+          <p class="muted small">Look for a sudden permanent drop, flat-lined readings, or runs of zero days.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" class="wrap">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div><b>1. Clean</b><p>Interpolate missing readings, cap sensor spikes at mean + 2σ, scale each customer to 0–1 so the model learns the <em>shape</em> of usage, not the house size.</p></div>
+      <div><b>2. Engineer features</b><p>Zero-day share, before/after consumption drop, weekly irregularity, day-to-day jumpiness, flat-line days, long-term trend.</p></div>
+      <div><b>3. Wide &amp; Deep CNN</b><p><em>Wide:</em> dense layers over the full series. <em>Deep:</em> Conv2D over a 52 × 7 weeks-by-days image, since honest homes have a weekly rhythm that theft breaks. <em>Stats:</em> the engineered features.</p></div>
+      <div><b>4. Tune for the business</b><p>Class weights for the rare thief class, a hyperparameter search on validation AUC, and a decision threshold chosen to minimise false positives while keeping recall.</p></div>
+    </div>
+    <p class="muted small">Inspired by Zheng et al., <em>Wide and Deep CNNs for Electricity-Theft Detection</em>, IEEE TII 2018.
+      Trained in Python/Keras; weights exported to TensorFlow.js so this page needs no server.</p>
+  </section>
+
+  <footer class="wrap muted small">Built by Shruti Runwal · <a id="ghFoot" target="_blank" rel="noopener">Source code on GitHub</a></footer>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
